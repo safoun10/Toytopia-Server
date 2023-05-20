@@ -22,6 +22,24 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         await client.connect();
+
+        const galleryCollectionOne = client.db("Toytopia").collection("galleryOne");
+        const galleryCollectionTwo = client.db("Toytopia").collection("galleryTwo");
+
+        app.get("/gallery-one", async (req, res) => {
+            const cursor = galleryCollectionOne.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get("/gallery-two", async (req, res) => {
+            const cursor = galleryCollectionTwo.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+
+
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You are successfully connected to MongoDB!");
     } finally {
