@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@safoundb.d2yflbg.mongodb.net/?retryWrites=true&w=majority`;
 
 
@@ -21,10 +21,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        await client.connect();
+        client.connect();
 
         const galleryCollectionOne = client.db("Toytopia").collection("galleryOne");
         const galleryCollectionTwo = client.db("Toytopia").collection("galleryTwo");
+        const allToyCollection = client.db("Toytopia").collection("AllToys");
 
         app.get("/gallery-one", async (req, res) => {
             const cursor = galleryCollectionOne.find();
@@ -37,6 +38,19 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+
+        app.get("/all-toys", async (req, res) => {
+            const cursor = allToyCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // app.delete("/toys/:Id" , async(req , res ) => {
+        //     const id = req.params.Id;
+        //     const query = {_id : new ObjectId(id)};
+        //     const result = await allToyCollection.deleteOne(query);
+        //     res.send(result);
+        // })
 
 
 
