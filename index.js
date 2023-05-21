@@ -53,18 +53,40 @@ async function run() {
             res.send(result);
         })
 
-        app.post("/all-toys" , async (req , res) => {
+        app.post("/all-toys", async (req, res) => {
             const newToy = req.body;
             const result = await allToyCollection.insertOne(newToy);
             res.send(result);
         })
 
-        // app.delete("/toys/:Id" , async(req , res ) => {
-        //     const id = req.params.Id;
-        //     const query = {_id : new ObjectId(id)};
-        //     const result = await allToyCollection.deleteOne(query);
-        //     res.send(result);
-        // })
+        app.patch("/all-toys/:ID", async (req, res) => {
+            const id = req.params.ID;
+            const query = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const updatedToy = req.body;
+            const latestToy = {
+                $set: {
+                    toy_name: updatedToy.toy_name,
+                    photo: updatedToy.photo,
+                    category: updatedToy.category,
+                    seller_name: updatedToy.seller_name,
+                    seller_email: updatedToy.seller_email,
+                    price: updatedToy.price,
+                    rating: updatedToy.rating,
+                    quantity: updatedToy.quantity,
+                    description: updatedToy.description,
+                }
+            }
+            const result = await allToyCollection.updateOne(query, latestToy, options);
+            res.send(result);
+        })
+
+        app.delete("/all-toys/:ID", async (req, res) => {
+            const id = req.params.ID;
+            const query = { _id: new ObjectId(id) };
+            const result = await allToyCollection.deleteOne(query);
+            res.send(result);
+        })
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You have successfully established connection with MongoDB!");
