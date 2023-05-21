@@ -21,7 +21,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        client.connect();
+        // client.connect();
 
         const galleryCollectionOne = client.db("Toytopia").collection("galleryOne");
         const galleryCollectionTwo = client.db("Toytopia").collection("galleryTwo");
@@ -51,8 +51,6 @@ async function run() {
         //     const result = await allToyCollection.deleteOne(query);
         //     res.send(result);
         // })
-
-
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You are successfully connected to MongoDB!");
