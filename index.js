@@ -27,6 +27,7 @@ async function run() {
         const galleryCollectionTwo = client.db("Toytopia").collection("galleryTwo");
         const allToyCollection = client.db("Toytopia").collection("AllToys");
 
+
         app.get("/gallery-one", async (req, res) => {
             const cursor = galleryCollectionOne.find();
             const result = await cursor.toArray();
@@ -45,6 +46,19 @@ async function run() {
             res.send(result);
         })
 
+        app.get("/all-toys/:ID", async (req, res) => {
+            const id = req.params.ID;
+            const query = { _id: new ObjectId(id) }
+            const result = await allToyCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.post("/all-toys" , async (req , res) => {
+            const newToy = req.body;
+            const result = await allToyCollection.insertOne(newToy);
+            res.send(result);
+        })
+
         // app.delete("/toys/:Id" , async(req , res ) => {
         //     const id = req.params.Id;
         //     const query = {_id : new ObjectId(id)};
@@ -53,7 +67,7 @@ async function run() {
         // })
 
         await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You are successfully connected to MongoDB!");
+        console.log("Pinged your deployment. You have successfully established connection with MongoDB!");
     } finally {
         // await client.close();
     }
