@@ -98,7 +98,7 @@ run().catch(console.dir);
 
 
 app.get("/", (req, res) => {
-    res.send("Toytopia is running");
+    res.send("Toytopia server is running");
 })
 
 app.listen(port, () => {
